@@ -1,20 +1,12 @@
 # main.py
 # Januari 18
 
-# Geodetic Engineers of Utrecht
-
 ## Loading the modules
 import os
 import os,os.path
 import mapnik
 
-os.chdir('/home/user/git/TwoLocations')
-print os.getcwd()
-
-import zipfile
-zip_ref = zipfile.ZipFile("./ProjectSource/ne_110m_land.zip", 'r')
-zip_ref.extractall("./Component")
-zip_ref.close()
+os.chdir('~/data')
 
 ## Loading osgeo
 try:
@@ -33,7 +25,7 @@ else:
 
 ## choose your own name
 ## make sure this layer does not exist in your 'data' folder
-fn = "Component/Two_points_GEOU.shp"
+fn = "Two_points_GEOU.shp"
 layername = "2POINTS"
 
 ## Create shape file
@@ -65,22 +57,20 @@ point1 = ogr.Geometry(ogr.wkbPoint)
 point2 = ogr.Geometry(ogr.wkbPoint)
 
 ## SetPoint(self, int point, double x, double y, double z = 0)
-point1.SetPoint(0,-68.875088,12.08162866)
-point2.SetPoint(0,4.768967,52.307267)
-
+point1.SetPoint(0,12.08162866,-68.875088) 
+point2.SetPoint(0,52.307267,4.768967)
 
 ## Actually we can do lots of things with points: 
 ## Export to other formats/representations:
-#print "KML file export"
-#print point2.ExportToKML()
-
+print "KML file export"
+print point2.ExportToKML()
 
 ## Buffering
-#buffer = point2.Buffer(4,4)
-#print buffer.Intersects(point1)
+buffer = point2.Buffer(4,4)
+print buffer.Intersects(point1)
 
 ## More exports:
-#buffer.ExportToGML()
+buffer.ExportToGML()
 
 ## Back to the pyramid, we still have no Feature
 ## Feature is defined from properties of the layer:e.g:
@@ -109,15 +99,16 @@ ds.Destroy()
 ## below the output is shown of the above Python script that is run in the terminal
 
 
+ 
 
 #file with symbol for point
-file_symbol=os.path.join("ProjectSource","marker2.png")
+file_symbol=os.path.join("data","marker2.png")
 
 #First we create a map
 map = mapnik.Map(800, 400) #This is the image final image size
 
 #Lets put some sort of background color in the map
-map.background = mapnik.Color("DeepSkyBlue") # steelblue == #4682B4 
+map.background = mapnik.Color("steelblue") # steelblue == #4682B4 
 
 #Create the rule and style obj
 r = mapnik.Rule()
@@ -133,13 +124,14 @@ map.append_style("mapStyle", s)
 
 # Adding point layer
 layerPoint = mapnik.Layer("pointLayer")
-layerPoint.datasource = mapnik.Shapefile(file=os.path.join("Component",
-                                        "Two_points_GEOU.shp"))
+layerPoint.datasource = mapnik.Shapefile(file=os.path.join("data",
+                                        "twoLoopPoints.shp"))
+
 layerPoint.styles.append("mapStyle")
 
 #adding polygon
 layerPoly = mapnik.Layer("polyLayer")
-layerPoly.datasource = mapnik.Shapefile(file=os.path.join("Component",
+layerPoly.datasource = mapnik.Shapefile(file=os.path.join("data",
                                         "ne_110m_land.shp"))
 layerPoly.styles.append("mapStyle")
 
@@ -148,10 +140,10 @@ map.layers.append(layerPoly)
 map.layers.append(layerPoint)
 
 #Set boundaries 
-boundsLL = (-80.0,10.0, 5.0,55.0) #(minx, miny, maxx,maxy)
-
+boundsLL = (1.3,51.979, 8.306,53.162  ) #(minx, miny, maxx,maxy)
 map.zoom_to_box(mapnik.Box2d(*boundsLL)) # zoom to bbox
 
-mapnik.render_to_file(map, os.path.join("Component","Amsterdam_Curacao.png"), "png")
+mapnik.render_to_file(map, os.path.join("output",
+                                        "Mappie.png"), "png")
 print "All done - check content"
 
