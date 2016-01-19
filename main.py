@@ -8,7 +8,7 @@ import os
 import os,os.path
 import mapnik
 
-os.chdir('/home/user/git/TwoLocations')
+#os.chdir('/home/user/git/TwoLocations')
 print os.getcwd()
 
 import zipfile
