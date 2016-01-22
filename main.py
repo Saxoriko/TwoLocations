@@ -111,7 +111,7 @@ ds.Destroy()
 
 
 #file with symbol for point
-file_symbol=os.path.join("ProjectSource","marker2.png")
+file_symbol=os.path.join("ProjectSource","marker.png")
 
 #First we create a map
 map = mapnik.Map(800, 400) #This is the image final image size
