@@ -11,6 +11,9 @@ import os
 os.chdir('/home/user/git/TwoLocations')
 print os.getcwd()
 
+os.mkdir('./shapefile')
+os.mkdir('./output')
+
 #import our function
 from createshape import createpointshape
 
